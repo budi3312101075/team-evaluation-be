@@ -1,0 +1,41 @@
+POST http://localhost:5050/register-team
+Content-Type: application/json
+
+{
+   "code": "IL01220021aa21a",
+    "name": "Budi Prayogaaa21a",
+    "email": "budiprayoga5103@gmail.com",
+    "phone": "089519113444",
+    "gender": "L",
+    "linkedin": "https://www.linkedin.com/in/budiprayoga/",
+    "photo": "dwdwdwdwd",
+    "dapartment_id": 1,
+    "divisions_id": 1,
+    "position_id": 1,
+    "leader_id": 7
+}
+
+###
+POST http://localhost:5050/register-user
+Content-Type: application/json
+
+{
+    "name": "Billssss",
+    "email": "BisllJsessf@gmail.com",
+    "password": "BillJef",
+    "group_id": 2
+}
+
+
+###
+POST http://localhost:5050/login
+Content-Type: application/json
+
+{
+    "email": "BillJef@gmail.com",
+    "password": "BillJef"
+}
+
+
+###
+GET http://localhost:5050/logout
