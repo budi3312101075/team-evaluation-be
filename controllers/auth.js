@@ -173,8 +173,9 @@ export const login = async (req, res) => {
 
   try {
     const userExist = await query(
-      `SELECT id, email, password FROM 
-      users WHERE email = ? and is_active = 1`,
+      `SELECT  id, email, password 
+      FROM users WHERE DATE(deleted_at) 
+      IS NULL AND is_active = 1 AND email = ?`,
       [email]
     );
 
@@ -224,7 +225,7 @@ export const login = async (req, res) => {
     return res
       .status(200)
       .cookie("token", token, options)
-      .json({ success: true, data: token });
+      .json({ success: true, token: token });
   } catch (error) {
     return res.status(400).json({ message: error.message });
   }

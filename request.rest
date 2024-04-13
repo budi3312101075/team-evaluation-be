@@ -20,9 +20,9 @@ POST http://localhost:5050/register-user
 Content-Type: application/json
 
 {
-    "name": "Billssss",
-    "email": "BisllJsessf@gmail.com",
-    "password": "BillJef",
+    "name": "Bill Jeferson",
+    "email": "BillJeferson@gmail.com",
+    "password": "BillJeferson",
     "group_id": 2
 }
 
@@ -32,8 +32,8 @@ POST http://localhost:5050/login
 Content-Type: application/json
 
 {
-    "email": "BillJef@gmail.com",
-    "password": "BillJef"
+    "email": "budiprayoga5103@gmail.com",
+    "password": "budiprayoga5103"
 }
 
 
