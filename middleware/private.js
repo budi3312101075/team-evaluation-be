@@ -1,17 +1,34 @@
-import jwt from "jsonwebtoken";
+import "dotenv/config";
+import passport from "passport";
+import passportJWT from "passport-jwt";
+import { managementQuery } from "../utils/query.js";
+import privateKey from "../utils/private.js";
 
-export const privateRoutes = (req, res, next) => {
-  let token = req.cookies.token;
-  if (!token) {
-    return res
-      .status(401)
-      .json({ success: false, msg: "you must login first" });
-  }
-  try {
-    const decode = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
-    req.user = decode.data;
-    next();
-  } catch (error) {
-    return res.status(400).json({ success: false, msg: error.message });
-  }
-};
+const ExtractJWT = passportJWT.ExtractJwt;
+const strategyJWT = passportJWT.Strategy;
+
+passport.use(
+  "internal-rule",
+  new strategyJWT(
+    {
+      jwtFromRequest: ExtractJWT.fromAuthHeaderAsBearerToken(),
+      secretOrKey: privateKey,
+    },
+    async (payload, done) => {
+      const { id } = payload;
+      const [employee] = await managementQuery(
+        `SELECT id, role_id as roleId FROM teams WHERE id = ? `,
+        [id]
+      );
+
+      if (employee === undefined) return done(null, false);
+
+      const user = {
+        employeeId: employee.id,
+        roleId: employee.roleId,
+      };
+
+      done(null, user);
+    }
+  )
+);

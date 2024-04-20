@@ -1,22 +1,22 @@
 import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
-import authRoutes from "./routes/auth.js";
+import routes from "./routes/index.js";
 import { fileDir } from "./utils/tools.cjs";
 import { scheduleJob } from "node-schedule";
 import cluster from "node:cluster";
-import { cpus } from "node:os";
+import { availableParallelism } from "node:os";
+import passport from "passport";
+import "./middleware/private.js";
 
-const totalCPU = cpus().length;
+const totalCPU = availableParallelism();
 
 if (cluster.isMaster) {
   for (let i = 0; i < totalCPU; i++) {
     cluster.fork();
 
     if (i === 1) {
-      scheduleJob("0 1 * * *", async function () {
-        // await ClearPrevCode();
-      });
+      scheduleJob("0 1 * * *", async function () {});
     }
   }
 } else {
@@ -35,7 +35,8 @@ function startExpress() {
   );
   app.use(express.static(fileDir()));
   app.use(express.json());
-  app.use(authRoutes);
+  app.use(passport.initialize());
+  app.use(routes);
 
   app.listen(process.env.APP_PORT, () => {
     console.log(

@@ -1,4 +1,4 @@
-import query from "../config/db.js";
+import { teamQuery } from "../utils/query.js";
 import { dateValue } from "../utils/tools.cjs";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
@@ -41,7 +41,7 @@ export const registerTeam = async (req, res) => {
     }
 
     // validasi leader
-    const leaderExist = await query(
+    const leaderExist = await teamQuery(
       `SELECT id FROM teams WHERE id = ? and is_active = 1`,
       [leader_id]
     );
@@ -50,11 +50,11 @@ export const registerTeam = async (req, res) => {
     }
 
     // validasi code dan name
-    const codeExist = await query(
+    const codeExist = await teamQuery(
       `SELECT code FROM teams WHERE code = ? and is_active = 1`,
       [code]
     );
-    const nameExist = await query(
+    const nameExist = await teamQuery(
       `SELECT name FROM teams WHERE name = ? and is_active = 1`,
       [name]
     );
@@ -71,7 +71,7 @@ export const registerTeam = async (req, res) => {
         failed: "name has been used",
       });
     } else {
-      const insertQuery = await query(
+      const insertQuery = await teamQuery(
         `INSERT INTO teams (code, name, email, phone, gender, linkedin,
          photo, department_id, divisions_id, position_id, created_at, created_by)
         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
@@ -93,7 +93,7 @@ export const registerTeam = async (req, res) => {
       // insert team leader
       const teamId = insertQuery.insertId;
 
-      await query(
+      await teamQuery(
         `INSERT INTO team_leadership (team_id, leader_id, created_at, created_by) 
          VALUES (?, ?, ?, ?)`,
         [teamId, leader_id, dateValue(), req.user.id]
@@ -112,15 +112,15 @@ export const registerUser = async (req, res) => {
     return res.status(400).json({ failed: "incomplete data" });
   }
   try {
-    const nameExist = await query(
+    const nameExist = await teamQuery(
       `SELECT name FROM users WHERE name = ? and is_active = 1`,
       [name]
     );
-    const emailExist = await query(
+    const emailExist = await teamQuery(
       `SELECT email FROM users WHERE email = ? and is_active = 1`,
       [email]
     );
-    const teamExist = await query(
+    const teamExist = await teamQuery(
       `SELECT team_id FROM user_teams WHERE team_id = ?`,
       [team_Id]
     );
@@ -145,7 +145,7 @@ export const registerUser = async (req, res) => {
       const salt = await bcrypt.genSalt(10);
       const hashPassword = await bcrypt.hash(password, salt);
 
-      const insertQuery = await query(
+      const insertQuery = await teamQuery(
         `INSERT INTO users 
       (name, email, password, group_id, created_at, created_by) 
       VALUES (?, ?, ?, ?, ?, ?)`,
@@ -154,7 +154,7 @@ export const registerUser = async (req, res) => {
       const userId = insertQuery.insertId;
 
       if (team_Id) {
-        await query(
+        await teamQuery(
           `INSERT INTO user_teams 
           (user_id, team_id, created_at, created_by) 
           VALUES (?, ?, ?, ?)`,
@@ -172,7 +172,7 @@ export const login = async (req, res) => {
   const { email, password } = req.body;
 
   try {
-    const userExist = await query(
+    const userExist = await teamQuery(
       `SELECT  id, email, password 
       FROM users WHERE DATE(deleted_at) 
       IS NULL AND is_active = 1 AND email = ?`,
@@ -191,7 +191,7 @@ export const login = async (req, res) => {
       return res.status(400).json({ failed: "password not match" });
     }
 
-    const dataUser = await query(
+    const dataUser = await teamQuery(
       `SELECT u.id, u.name AS namaAkun, t.code, t.name, t.email,ug.name AS role, 
       t.phone, t.gender, t.linkedin, t.photo, dp.name AS dapartement, 
       d.name AS divisi, p.name AS posisi
