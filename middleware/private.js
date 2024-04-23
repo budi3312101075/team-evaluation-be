@@ -1,7 +1,7 @@
 import "dotenv/config";
 import passport from "passport";
 import passportJWT from "passport-jwt";
-import { managementQuery } from "../utils/query.js";
+import { mentors } from "../utils/query.js";
 import privateKey from "../utils/private.js";
 
 const ExtractJWT = passportJWT.ExtractJwt;
@@ -16,8 +16,8 @@ passport.use(
     },
     async (payload, done) => {
       const { id } = payload;
-      const [employee] = await managementQuery(
-        `SELECT id, divisions_id AS divisionsId, role_id AS roleId FROM teams WHERE id = ? `,
+      const [employee] = await mentors(
+        `SELECT id, role_id as roleId FROM mentors WHERE id = ? `,
         [id]
       );
 

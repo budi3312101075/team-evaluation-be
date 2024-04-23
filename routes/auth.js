@@ -1,18 +1,14 @@
 import express from "express";
-import {
-  login,
-  logout,
-  registerTeam,
-  registerUser,
-} from "../controllers/auth.js";
-import multerTeam from "../middleware/multerTeam.js";
-// import { privateRoutes } from "../middleware/private.js";
+import { validateLogin, login, resetPassword } from "../controllers/auth.js";
+import passport from "passport";
 
 const router = express.Router();
 
-router.post("/register-team", multerTeam, registerTeam);
-router.post("/register-user", registerUser);
-router.post("/login", login);
-router.get("/logout", logout);
+router.post("/login", validateLogin, login);
+router.put(
+  "/reset-password",
+  passport.authenticate("internal-rule", { session: false }),
+  resetPassword
+);
 
 export default router;
