@@ -5,7 +5,7 @@ import privateRoute from "./private.js";
 
 const app = express();
 
-const api = "/api/v1/teams";
+const api = "/api/v1";
 
 app.use(
   api,

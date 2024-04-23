@@ -17,7 +17,7 @@ passport.use(
     async (payload, done) => {
       const { id } = payload;
       const [employee] = await managementQuery(
-        `SELECT id, role_id as roleId FROM teams WHERE id = ? `,
+        `SELECT id, divisions_id AS divisionsId, role_id AS roleId FROM teams WHERE id = ? `,
         [id]
       );
 
@@ -25,6 +25,7 @@ passport.use(
 
       const user = {
         employeeId: employee.id,
+        divisionsId: employee.divisionsId,
         roleId: employee.roleId,
       };
 
