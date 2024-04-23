@@ -1,10 +1,10 @@
-import { managementQuery, teamQuery } from "../../utils/query.js";
+import { managementQuery, evaluation } from "../../utils/query.js";
 
 export const getTeams = async (req, res) => {
   const employeeId = req.user.employeeId;
   const divisiId = req.user.divisionsId;
   try {
-    const cekLeaders = await teamQuery(
+    const cekLeaders = await evaluation(
       `SELECT leader_id FROM 
       team_leadership WHERE 
       team_id = ? AND is_deleted = 0;`,

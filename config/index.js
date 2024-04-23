@@ -3,11 +3,21 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
-export const teamDB = mysql.createPool({
+export const evaluationDB = mysql.createPool({
   host: process.env.DBHOST,
   user: process.env.DBUSER,
   password: process.env.DBPASSWORD,
   database: process.env.TEAM_DB,
+  multipleStatements: true,
+  waitForConnections: true,
+  connectionLimit: 30,
+});
+
+export const mentorsDB = mysql.createPool({
+  host: process.env.DBHOST,
+  user: process.env.DBUSER,
+  password: process.env.DBPASSWORD,
+  database: process.env.MENTORS_DB,
   multipleStatements: true,
   waitForConnections: true,
   connectionLimit: 30,

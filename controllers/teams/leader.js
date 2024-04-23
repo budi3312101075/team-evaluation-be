@@ -1,4 +1,4 @@
-import { teamQuery } from "../../utils/query.js";
+import { evaluation } from "../../utils/query.js";
 import { uuid, dateValue } from "../../utils/tools.cjs";
 
 export const created = async (req, res) => {
@@ -8,7 +8,7 @@ export const created = async (req, res) => {
     if (!teamId || !leaderId) {
       return res.status(400).json({ failed: "incomplete data" });
     }
-    const teamExist = await teamQuery(
+    const teamExist = await evaluation(
       `SELECT team_id FROM team_leadership WHERE team_id = ? and is_deleted = 0`,
       [teamId]
     );
@@ -20,7 +20,7 @@ export const created = async (req, res) => {
 
     const id = uuid();
 
-    await teamQuery(
+    await evaluation(
       `INSERT INTO team_leadership (
         id, team_id, leader_id, created_at, created_by) VALUES 
         (?, ?, ?, ?, ?)`,
@@ -38,7 +38,7 @@ export const update = async (req, res) => {
   const employeeId = req.user.employeeId;
   const { leaderId } = req.body;
   try {
-    const findLeader = await teamQuery(
+    const findLeader = await evaluation(
       `SELECT id FROM team_leadership WHERE id = ? and is_deleted = 0`,
       [id]
     );
@@ -47,7 +47,7 @@ export const update = async (req, res) => {
       return res.status(400).json({ failed: "Leader not found" });
     }
 
-    await teamQuery(
+    await evaluation(
       `UPDATE team_leadership SET 
       leader_id = ?, 
       updated_at = ?, 
@@ -66,7 +66,7 @@ export const deleted = async (req, res) => {
   const id = req.params.id;
   const employeeId = req.user.employeeId;
   try {
-    const findLeader = await teamQuery(
+    const findLeader = await evaluation(
       `SELECT id FROM team_leadership WHERE id = ? and is_deleted = 0`,
       [id]
     );
@@ -75,7 +75,7 @@ export const deleted = async (req, res) => {
       return res.status(400).json({ failed: "Leader not found" });
     }
 
-    await teamQuery(
+    await evaluation(
       `UPDATE team_leadership SET 
       is_deleted = ?, 
       updated_by = ?, 
