@@ -17,7 +17,7 @@ passport.use(
     async (payload, done) => {
       const { id } = payload;
       const [employee] = await mentors(
-        `SELECT id, role_id as roleId FROM mentors WHERE id = ? `,
+        `SELECT id, role_id as roleId, divisions_id as divisionsId FROM mentors WHERE id = ? `,
         [id]
       );
 

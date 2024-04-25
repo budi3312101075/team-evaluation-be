@@ -31,9 +31,12 @@ export const validateLogin = async (req, res, next) => {
     }
 
     // check by email
-    const [checkByEmail] = await query(
+    const [checkByEmail] = await mentors(
       `
-        SELECT id, password, is_deleted as isDeleted, is_active as isActive FROM teams WHERE email = ?
+        SELECT id, password, 
+        is_deleted as isDeleted, 
+        is_active as isActive 
+        FROM mentors WHERE email = ?
       `,
       [username]
     );

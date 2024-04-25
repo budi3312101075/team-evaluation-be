@@ -1,4 +1,4 @@
-import { managementQuery, evaluation } from "../../utils/query.js";
+import { mentors, evaluation } from "../../utils/query.js";
 
 export const getTeams = async (req, res) => {
   const employeeId = req.user.employeeId;
@@ -12,9 +12,9 @@ export const getTeams = async (req, res) => {
     );
 
     if (cekLeaders.length === 0) {
-      const teams = await managementQuery(
+      const teams = await mentors(
         `SELECT id, name, photo FROM 
-      teams WHERE 
+      mentors WHERE 
       divisions_id = ? AND id != ? AND 
       is_active = 1 AND is_deleted = 0;`,
         [divisiId, employeeId]
@@ -25,16 +25,16 @@ export const getTeams = async (req, res) => {
 
     const leaderId = cekLeaders[0].leader_id;
 
-    const getLeaders = await managementQuery(
+    const getLeaders = await mentors(
       `SELECT id, name, photo FROM
-      teams WHERE id = ? AND is_active = 1 
+      mentors WHERE id = ? AND is_active = 1 
       AND is_deleted = 0 ;`,
       [leaderId]
     );
 
-    const teams = await managementQuery(
+    const teams = await mentors(
       `SELECT id, name, photo
-      FROM teams WHERE divisions_id = ?
+      FROM mentors WHERE divisions_id = ?
       AND id != ? AND is_active = 1 AND is_deleted = 0;`,
       [divisiId, employeeId]
     );
