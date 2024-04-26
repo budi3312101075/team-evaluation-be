@@ -1,8 +1,15 @@
 import express from "express";
-import { getTeams } from "../../controllers/teams/team.js";
+import {
+  addTeams,
+  getAll,
+  validationAddTeams,
+  teams,
+} from "../../controllers/teams/team.js";
 
 const router = express.Router();
 
-router.get("/teams", getTeams);
+router.get("/teams-all", getAll);
+router.get("/teams", teams);
+router.post("/teams", validationAddTeams, addTeams);
 
 export default router;
