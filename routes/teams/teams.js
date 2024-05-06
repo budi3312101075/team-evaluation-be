@@ -8,8 +8,8 @@ import {
 
 const router = express.Router();
 
-router.get("/teams-all", getAll);
-router.get("/teams", teams);
-router.post("/teams", validationAddTeams, addTeams);
+router.get("/teams-all", getAll); // untuk admin ambil semua data mentors
+router.get("/teams", teams); // get berdasarkan siapa saja teams dari user yg login
+router.post("/teams", [validationAddTeams, addTeams]);
 
 export default router;

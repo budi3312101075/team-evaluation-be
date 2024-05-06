@@ -16,17 +16,16 @@ passport.use(
     },
     async (payload, done) => {
       const { id } = payload;
-      const [employee] = await mentors(
-        `SELECT id, role_id as roleId, divisions_id as divisionsId FROM mentors WHERE id = ? `,
+      const [mentor] = await mentors(
+        `SELECT id, role_id as roleId FROM mentors WHERE id = ? `,
         [id]
       );
 
-      if (employee === undefined) return done(null, false);
+      if (mentor === undefined) return done(null, false);
 
       const user = {
-        employeeId: employee.id,
-        divisionsId: employee.divisionsId,
-        roleId: employee.roleId,
+        mentorId: mentor.id,
+        roleId: mentor.roleId,
       };
 
       done(null, user);
